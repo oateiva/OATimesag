@@ -37,6 +37,42 @@ The app writes its timesheet files into a `Timesag/` subfolder next to the scrip
 
 ---
 
+## Web version
+
+The same interface runs in the browser, published from this repo's `docs/` folder with GitHub Pages:
+
+| | |
+|---|---|
+| Landing page | <https://oateiva.github.io/OATimesag/> |
+| **The app** | <https://oateiva.github.io/OATimesag/app/> |
+
+It is the desktop UI with two differences, both forced by Pages being static:
+
+- **Copy only.** There is no Save button — nothing on a static host to write a file to. Press
+  **📋 Copy** to put the whole week's lines on the clipboard.
+- **The week lives in your browser.** Every edit auto-saves to `localStorage` under
+  `timesag:<ISO year>-W<NN>`, so reopening a week restores it. That replaces reading back
+  `Timesag/<WN>_oat.txt`. Clearing site data clears the weeks.
+
+Everything else is the same: five Mon–Fri columns, draggable boxes, the hour ruler, the day-total
+badge, observances, and the on-this-day fact (fetched live from Wikimedia and cached per browser,
+with the same inclusive 50 % selection described below).
+
+To run it locally, serve `docs/` — opening the files directly with `file://` will not work, because
+ES modules and `fetch` are blocked there:
+
+```
+python -m http.server 8000 --directory docs
+```
+
+Then open <http://localhost:8000/app/>.
+
+> `docs/app/projects.json` is a **copy** of the root `projects.json` — GitHub Pages serves only
+> `docs/`, so the root file is not reachable from the published app. Edit both, or the web version
+> will show stale projects.
+
+---
+
 ## Output format
 
 Saving a week writes `Timesag/<WN>_oat.txt`, where `<WN>` is the 2-digit ISO week number. One line **per box**, comma-separated:
@@ -134,6 +170,8 @@ Flags are **drawn on a small canvas** (not emoji), so they render identically on
 | `observances.json` | Curated special days (auto-seeded, editable) |
 | `events_cache.json` | Cached on-this-day facts (auto-generated) |
 | `Timesag/<WN>_oat.txt` | The weekly timesheet output |
+| `docs/index.html` | Landing page published on GitHub Pages |
+| `docs/app/` | The browser version (`index.html`, `styles.css`, `data.js`, `app.js`, `projects.json`) |
 
 ---
 
@@ -141,4 +179,6 @@ Flags are **drawn on a small canvas** (not emoji), so they render identically on
 
 - Only **Mon–Fri** are shown, so weekend observances/facts don't appear.
 - The Union Jack is a small-canvas approximation (proper counterchanged diagonals aren't practical at 24 px).
+- The web version needs a network connection only for the on-this-day fact; without one the
+  fact line stays blank and everything else works.
 - Box **start time** is a display convenience — it isn't stored in the timesheet (the format has no start-time field), so it resets to 08:00 on reload.

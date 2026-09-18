@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Timesag — weekly timesheet</title>
+<meta name="description" content="Calendar-style weekly timesheet. Fill the week, copy the payroll lines.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='14' font-size='14'>🗓</text></svg>">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header>
+  <div class="brand">🗓&nbsp; Timesag</div>
+  <div class="nav">
+    <button id="prev" class="arrow" type="button" title="previous week">‹</button>
+    <span id="weeklabel"></span>
+    <button id="next" class="arrow" type="button" title="next week">›</button>
+    <input id="picker" type="date" title="jump to the week containing this date">
+  </div>
+</header>
+
+<main id="week"></main>
+
+<footer>
+  <span id="status"></span>
+  <a class="home" href="../">← about Timesag</a>
+  <button id="copy" type="button">📋&nbsp; Copy</button>
+</footer>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>
