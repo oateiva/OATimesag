@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Timesag — a calendar-style weekly timesheet</title>
+<style>
+  :root{
+    --bg:#161616; --card:#1f1f1f; --line:#2e2e2e; --fg:#e8ebee; --mut:#9aa0a6;
+    --green:#2e9e5b; --blue:#3b82f6; --amber:#e0902f; --red:#dc2626; --link:#7fb0ff;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Segoe UI",system-ui,-apple-system,sans-serif;
+       background:var(--bg);color:var(--fg);line-height:1.6}
+  a{color:var(--link)}
+  .wrap{max-width:1040px;margin:0 auto;padding:0 24px}
+  header{padding:64px 0 32px;text-align:center}
+  h1{font-size:clamp(2.4rem,6vw,3.6rem);margin:0;letter-spacing:-.02em}
+  .tag{color:var(--mut);font-size:1.2rem;margin-top:10px}
+  .badges{margin-top:20px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+  .pill{border:1px solid var(--line);border-radius:999px;padding:5px 14px;font-size:.85rem;color:var(--mut)}
+  .btns{margin-top:26px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+  .btn{display:inline-block;padding:12px 22px;border-radius:10px;font-weight:700;text-decoration:none}
+  .btn.primary{background:var(--green);color:#fff}
+  .btn.ghost{border:1px solid var(--line);color:var(--fg)}
+  .shot{margin:40px auto;max-width:100%;border-radius:14px;border:1px solid var(--line);
+        box-shadow:0 20px 60px rgba(0,0,0,.5);display:block}
+  section{padding:40px 0;border-top:1px solid var(--line)}
+  h2{font-size:1.7rem;margin:0 0 20px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+  .feat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px}
+  .feat h3{margin:0 0 6px;font-size:1.05rem}
+  .feat p{margin:0;color:var(--mut);font-size:.95rem}
+  pre{background:#0f0f0f;border:1px solid var(--line);border-radius:10px;padding:16px 18px;
+      overflow-x:auto;font-size:.92rem}
+  code{font-family:Consolas,"SF Mono",monospace}
+  .incl{background:linear-gradient(180deg,#1d251f,#191919);border:1px solid #2b4a34}
+  .steps{counter-reset:s;list-style:none;padding:0;margin:0}
+  .steps li{position:relative;padding:14px 0 14px 52px;border-bottom:1px dashed var(--line)}
+  .steps li:last-child{border-bottom:none}
+  .steps li::before{counter-increment:s;content:counter(s);position:absolute;left:0;top:12px;
+    width:34px;height:34px;border-radius:50%;background:var(--green);color:#fff;font-weight:800;
+    display:flex;align-items:center;justify-content:center}
+  .legend{display:flex;gap:18px;flex-wrap:wrap;margin-top:14px;color:var(--mut);font-size:.9rem}
+  .dot{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:6px;vertical-align:middle}
+  .note{background:#241d1d;border:1px solid #4a2b2b;border-radius:10px;padding:14px 18px;color:#e7c8c8;font-size:.92rem}
+  table{border-collapse:collapse;width:100%;font-size:.92rem}
+  th,td{border:1px solid var(--line);padding:8px 12px;text-align:left}
+  th{color:var(--mut);font-weight:600}
+  footer{padding:40px 0 64px;color:var(--mut);text-align:center;border-top:1px solid var(--line)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>🗓 Timesag</h1>
+    <div class="tag">A modern, calendar-style weekly timesheet for the desktop.</div>
+    <div class="badges">
+      <span class="pill">Python + CustomTkinter</span>
+      <span class="pill">Drag-to-time boxes</span>
+      <span class="pill">On-this-day facts</span>
+      <span class="pill">Inclusive by design</span>
+    </div>
+    <div class="btns">
+      <a class="btn primary" id="repo-btn" href="#">View on GitHub</a>
+      <a class="btn ghost" href="#get">Get started</a>
+    </div>
+  </header>
+
+  <img class="shot" src="screenshot.png" alt="Timesag app — five day columns with coloured time boxes, hour totals, and on-this-day facts">
+
+  <section>
+    <h2>What it does</h2>
+    <p style="color:var(--mut);max-width:70ch">
+      Each weekday is a vertical time axis you fill with colour-coded boxes — working,
+      holiday, sick, paid time off or bank holiday. Timesag writes them out in the exact
+      fixed-width format the payroll system expects, one line per box.
+    </p>
+    <div class="grid">
+      <div class="feat"><h3>🧱 Duration boxes</h3><p>Boxes auto-stack from a start time; height is proportional to hours. Minimum 0.5 h so controls always fit.</p></div>
+      <div class="feat"><h3>✏️ Edit in place</h3><p>Type, hours and project live inside each box. Change hours and the box resizes on the timeline.</p></div>
+      <div class="feat"><h3>🕗 Draggable start</h3><p>Drag a box to move the day's start (snaps to half-hours); double-click to reset to 08:00.</p></div>
+      <div class="feat"><h3>🎯 Total badge</h3><p>A colour-coded pill shows the day's summed hours against a 7.4 h target.</p></div>
+      <div class="feat"><h3>🌍 Special days</h3><p>World, Danish, Spanish, British and Indian observances, each with a hand-drawn flag.</p></div>
+      <div class="feat"><h3>📋 Save &amp; Copy</h3><p>Write the week to <code>Timesag/&lt;week&gt;_oat.txt</code> or copy the lines to the clipboard.</p></div>
+    </div>
+  </section>
+
+  <section class="incl">
+    <h2>Inclusive on-this-day selection</h2>
+    <p style="max-width:74ch;color:var(--mut)">
+      Every column shows a clickable Wikipedia fact for that date, from the free Wikimedia
+      “On This Day” feed. The item is chosen by a process designed to surface real history
+      <em>and</em> under-represented figures:
+    </p>
+    <ol class="steps">
+      <li><strong>Score every candidate.</strong> Events, births and deaths are scored, with a boost for discovery/science and notable-figure keywords.</li>
+      <li><strong>Default to an event or discovery.</strong> The best historical event wins by default — so discoveries keep appearing, and famous figures still show through events about them (e.g. “Einstein sends the special-relativity paper”).</li>
+      <li><strong>Inclusive boost — up to a 50% chance.</strong> Among the day's top people, Timesag reads Wikidata claims <code>P21</code> (sex/gender ≠ male → women, non-binary) and <code>P91</code> (recorded sexual orientation → LGBTQ+). If one exists, a coin flip features them instead of the default event.</li>
+    </ol>
+    <p class="note">
+      <strong>Why not ethnic group?</strong> Wikidata's <code>P172</code> is filled for
+      almost every notable figure (Newton, Einstein included), so its presence is no signal
+      of a minority and would flag nearly everyone — defeating the 50% balance. It is
+      deliberately not used; boosting specific ethnic minorities would need a curated list.
+    </p>
+  </section>
+
+  <section id="get">
+    <h2>Get started</h2>
+    <pre><code>git clone https://github.com/OWNER/timesag.git
+cd timesag
+pip install -r requirements.txt
+python timesag.py</code></pre>
+    <p style="color:var(--mut)">Working-day projects live in <code>projects.json</code>; special days in <code>observances.json</code> (auto-seeded, editable).</p>
+  </section>
+
+  <section>
+    <h2>Output format</h2>
+    <p style="color:var(--mut)">One line per box: <code>110000,DD-MM-YYYY,0,R,0,&lt;code&gt;,&lt;hours&gt;,T,&lt;f9&gt;,,&lt;description&gt;</code></p>
+    <table>
+      <tr><th>Type</th><th>code</th><th>f9</th><th>line?</th></tr>
+      <tr><td><span class="dot" style="background:var(--green)"></span>Working</td><td>project</td><td>project</td><td>✅</td></tr>
+      <tr><td><span class="dot" style="background:var(--blue)"></span>Holiday</td><td>14002</td><td>94</td><td>✅</td></tr>
+      <tr><td><span class="dot" style="background:var(--red)"></span>Sick</td><td>14003</td><td>95</td><td>✅</td></tr>
+      <tr><td><span class="dot" style="background:var(--amber)"></span>Paid time off</td><td>14004</td><td>90</td><td>✅</td></tr>
+      <tr><td><span class="dot" style="background:#6b7280"></span>Bank holiday</td><td>—</td><td>—</td><td>❌ no line</td></tr>
+    </table>
+    <div class="legend">
+      <span><span class="dot" style="background:var(--green)"></span>Working</span>
+      <span><span class="dot" style="background:var(--blue)"></span>Holiday</span>
+      <span><span class="dot" style="background:var(--red)"></span>Sick</span>
+      <span><span class="dot" style="background:var(--amber)"></span>Paid time off</span>
+      <span><span class="dot" style="background:#6b7280"></span>Bank holiday</span>
+    </div>
+  </section>
+
+  <footer>
+    Built with Python &amp; CustomTkinter · MIT licensed ·
+    <a id="repo-link" href="#">source on GitHub</a>
+  </footer>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Timesag runtime output & generated files
+Timesag/
+events_cache.json
+observances.json
+
+# OS / editor
+.DS_Store
+Thumbs.db
